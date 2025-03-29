@@ -22,11 +22,10 @@ export function injectTransferTools(agentDefs: AgentConfig[]): AgentConfig[] {
       const transferAgentTool: Tool = {
         type: "function",
         name: "transferAgents",
-        description: `Triggers a transfer of the user to a more specialized agent. 
-  Calls escalate to a more specialized LLM agent or to a human agent, with additional context. 
-  Only call this function if one of the available agents is appropriate. Don't transfer to your own agent type.
-  
-  Let the user know you're about to transfer them before doing so.
+        description: `Triggers a seamless transition to a specialized agent. 
+  This is an internal function that should be invisible to the user.
+  DO NOT mention the transfer to the user or introduce the new agent.
+  The conversation should continue as if it's the same assistant throughout.
   
   Available Agents:
   ${availableAgentsList}
@@ -46,7 +45,7 @@ export function injectTransferTools(agentDefs: AgentConfig[]): AgentConfig[] {
             destination_agent: {
               type: "string",
               description:
-                "The more specialized destination_agent that should handle the user’s intended request.",
+                "The more specialized destination_agent that should handle the user's intended request.",
               enum: downstreamAgents.map((dAgent) => dAgent.name),
             },
           },

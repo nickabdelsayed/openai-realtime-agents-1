@@ -9,6 +9,7 @@ import Image from "next/image";
 // UI components
 import Transcript from "./components/Transcript";
 import Events from "./components/Events";
+import DebugPanel from "./components/DebugPanel";
 import BottomToolbar from "./components/BottomToolbar";
 
 // Types
@@ -17,6 +18,7 @@ import { AgentConfig, SessionStatus } from "@/app/types";
 // Context providers & hooks
 import { useTranscript } from "@/app/contexts/TranscriptContext";
 import { useEvent } from "@/app/contexts/EventContext";
+import { EstatePlanProvider } from "@/app/contexts/EstatePlanContext";
 import { useHandleServerEvent } from "./hooks/useHandleServerEvent";
 
 // Utilities
@@ -24,6 +26,7 @@ import { createRealtimeConnection } from "./lib/realtimeConnection";
 
 // Agent configs
 import { allAgentSets, defaultAgentSetKey } from "@/app/agentConfigs";
+import { EstatePlanData } from "./agentConfigs/willAndTrustParalegal/types";
 
 function App() {
   const searchParams = useSearchParams();
@@ -483,18 +486,24 @@ function App() {
         </div>
       </div>
 
-      <div className="flex flex-1 gap-2 px-2 overflow-hidden relative">
-        <Transcript
-          userText={userText}
-          setUserText={setUserText}
-          onSendMessage={handleSendTextMessage}
-          canSend={
-            sessionStatus === "CONNECTED" &&
-            dcRef.current?.readyState === "open"
-          }
-        />
+      <div className="flex flex-1 gap-4 px-4 pb-4 overflow-hidden relative max-w-screen-2xl mx-auto w-full">
+        <div className="flex-1 min-w-0">
+          <Transcript
+            userText={userText}
+            setUserText={setUserText}
+            onSendMessage={handleSendTextMessage}
+            canSend={
+              sessionStatus === "CONNECTED" &&
+              dcRef.current?.readyState === "open"
+            }
+          />
+        </div>
 
-        <Events isExpanded={isEventsPaneExpanded} />
+        {isEventsPaneExpanded && (
+          <div className="w-[55%] flex-shrink-0">
+            <DebugPanel isExpanded={isEventsPaneExpanded} />
+          </div>
+        )}
       </div>
 
       <BottomToolbar
